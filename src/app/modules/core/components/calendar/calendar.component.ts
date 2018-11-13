@@ -4,22 +4,45 @@ import {
   ViewEncapsulation,
   OnInit
 } from '@angular/core';
-import { CalendarEvent, CalendarMonthViewDay } from 'angular-calendar';
+import { CalendarEvent, CalendarMonthViewDay,   CalendarDateFormatter  } from 'angular-calendar';
 import { Service } from 'src/app/shared/model/service';
 import { Availability } from 'src/app/shared/model/availability';
 import { Subject } from 'rxjs';
+import { CustomDateFormatter } from './custom-date-formatter.provider';
+
+const users = [
+  {
+    id: 0,
+    name: 'Slot 1'
+  },
+  {
+    id: 1,
+    name: 'slot 2'
+  },
+  {
+    id: 2,
+    name: 'slot 3'
+  }
+];
 
 @Component({
   selector: 'mwl-demo-component',
   styleUrls: ['./calendar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  templateUrl: 'calendar.component.html'
+  templateUrl: 'calendar.component.html',
+  providers: [
+    {
+      provide: CalendarDateFormatter,
+      useClass: CustomDateFormatter
+    }
+  ]
 })
 export class CalendarComponent implements OnInit{
   view: string = 'month';
 
   viewDate: Date = new Date();
+  hourSegmentHeight: number = 10;
 
   events: CalendarEvent[] = [];
   selectedService: Service;

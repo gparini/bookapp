@@ -9,17 +9,25 @@
     [viewDate]="viewDate"
     [events]="events"
     (beforeViewRender)="beforeMonthViewRender($event)"
-    [refresh]="refresh">
+    [refresh]="refresh"
+    (dayClicked)="viewDate = $event.day.date; view = 'day'">
   </mwl-calendar-month-view>
   <mwl-calendar-week-view
     *ngSwitchCase="'week'"
+    [hourSegments]="6"
     [viewDate]="viewDate"
-    [events]="events">
+    [events]="events"
+    [dayStartHour]="9"
+    [dayEndHour]="20"
+    (dayHeaderClicked)="viewDate = $event.day.date; view = 'day'">
   </mwl-calendar-week-view>
   <mwl-calendar-day-view
     *ngSwitchCase="'day'"
+    [hourSegments]="6"
     [viewDate]="viewDate"
-    [events]="events">
+    [events]="events"
+    [dayStartHour]="9"
+    [dayEndHour]="20">
   </mwl-calendar-day-view>
 </div>
 
