@@ -1,3 +1,12 @@
+<h2>Services</h2>
+<ul class="services" >
+  <li *ngFor="let service of services" 
+      [class.selected]="service === selectedService"
+      (click)="onSelect(service)">
+      <span class="serv">{{service.id}}</span>
+  </li>
+</ul>
+
 <mwl-demo-utils-calendar-header
   [(view)]="view"
   [(viewDate)]="viewDate">
@@ -21,21 +30,13 @@
     [dayEndHour]="20"
     (dayHeaderClicked)="viewDate = $event.day.date; view = 'day'">
   </mwl-calendar-week-view>
-  <mwl-calendar-day-view
-    *ngSwitchCase="'day'"
-    [hourSegments]="6"
-    [viewDate]="viewDate"
-    [events]="events"
-    [dayStartHour]="9"
-    [dayEndHour]="20">
-  </mwl-calendar-day-view>
-</div>
 
-<h2>Services</h2>
-<ul class="services" >
-  <li *ngFor="let service of services" 
-      [class.selected]="service === selectedService"
-      (click)="onSelect(service)">
-      <span class="serv">{{service.id}}</span>
-  </li>
-</ul>
+  <mwl-day-view-scheduler
+  *ngSwitchCase="'day'"
+  [viewDate]="viewDate"
+  [events]="events"
+  [hourSegments]="6"
+  (eventTimesChanged)="eventTimesChanged($event)"
+  (userChanged)="userChanged($event)">
+</mwl-day-view-scheduler>
+</div>

@@ -13,12 +13,14 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns'
 import { DemoUtilsModule } from './modules/core/components/demo-utils/module';
 import { DemoModule } from './modules/core/components/demo/module';
 import { FlatpickrModule } from 'angularx-flatpickr';
+import { DayViewSchedulerComponent } from './modules/core/components/calendar/day-view-scheduler.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     UserTestComponent,
-    CalendarComponent
+    CalendarComponent,
+    DayViewSchedulerComponent
   ],
   imports: [
     BrowserModule,
