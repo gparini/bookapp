@@ -2,6 +2,7 @@ import { Component, EventEmitter, Injectable, Output } from '@angular/core';
 import { CalendarDayViewComponent, CalendarUtils, CalendarDateFormatter} from 'angular-calendar';
 import { DayView, DayViewEvent, GetDayViewArgs } from 'calendar-utils';
 import { CustomDateFormatter } from './custom-date-formatter.provider';
+import { ActivatedRoute } from '@angular/router';
 
 const EVENT_WIDTH = 150;
 
@@ -28,6 +29,13 @@ interface DayViewScheduler extends DayView {
 
 @Injectable()
 export class DayViewSchedulerCalendarUtils extends CalendarUtils {
+
+  showHead: boolean = false;
+
+  // constructor(private route: ActivatedRoute) { 
+  //   super();
+  // }
+
   getDayView(args: GetDayViewArgs): DayViewScheduler {
     const view: DayViewScheduler = {
       ...super.getDayView(args),

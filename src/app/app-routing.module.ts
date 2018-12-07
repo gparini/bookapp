@@ -10,7 +10,11 @@ const routes: Routes = [
     component: UserTestComponent
   },
   {
-    path: 'calendar',
+    path: 'calendarView/:mode',
+    component: CalendarComponent
+  },
+  {
+    path: 'calendarManage/:mode',
     component: CalendarComponent
   },
   {

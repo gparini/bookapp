@@ -1,5 +1,9 @@
 <h2>Services</h2>
-<ul class="services" >
+
+{{provaGianni}}
+{{showGianni}}
+
+<ul class="services" *ngIf="show">
   <li *ngFor="let service of services" 
       [class.selected]="service === selectedService"
       (click)="onSelect(service)">
