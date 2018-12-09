@@ -1,3 +1,35 @@
+<ng-template #modalContent let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">Event action occurred</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div>
+      Action:
+      <pre>{{ modalData?.action }}</pre>
+    </div>
+    <div>
+      Event:
+      <pre>{{ modalData?.event | json }}</pre>
+    </div>
+
+    <div>
+      <form (ngSubmit)="onSubmit()">
+        Nome: <input type="text" name="fname"><br>
+        Cognome: <input type="text" name="lname"><br>
+        Cellulare: <input type="text" name="lname"><br>
+        <button type="submit" class="btn btn-success">Submit</button>
+      </form>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">OK</button>
+  </div>
+</ng-template>
+
 <h2>Services</h2>
 
 {{provaGianni}}
@@ -10,6 +42,7 @@
       <span class="serv">{{service.id}}</span>
   </li>
 </ul>
+
 
 <mwl-demo-utils-calendar-header
   [(view)]="view"
@@ -41,6 +74,7 @@
   [events]="events"
   [hourSegments]="6"
   (eventTimesChanged)="eventTimesChanged($event)"
-  (userChanged)="userChanged($event)">
+  (userChanged)="userChanged($event)"
+  (eventClicked)="handleEvent('Clicked', $event.event)">
 </mwl-day-view-scheduler>
 </div>

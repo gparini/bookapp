@@ -3,10 +3,9 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation,
   OnInit,
-  OnDestroy,
   AfterViewInit,
-
-  NgZone 
+  ViewChild,
+  TemplateRef
 } from '@angular/core';
 import { CalendarEvent, CalendarMonthViewDay,   CalendarDateFormatter, CalendarEventTimesChangedEvent  } from 'angular-calendar';
 import { Service } from 'src/app/shared/model/service';
@@ -19,6 +18,7 @@ import { HttpClient } from '@angular/common/http';
 import { Viewbooking } from './viewbooking';
 import { ActivatedRoute } from '@angular/router';
 import { initNgModule } from '@angular/core/src/view/ng_module';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 const users = [
   {
@@ -68,13 +68,23 @@ export class CalendarComponent implements OnInit, AfterViewInit{
 
   events: CalendarEvent[] = [];
 
+  activeDayIsOpen: boolean = true;
+
   services: Service[] = [
     { id: 'PacchettoA'},
     { id: 'PacchettoB'},
     { id: 'PacchettoC'}
   ];
+  
+  modalData: {
+    action: string;
+    event: CalendarEvent;
+  };
 
-  constructor(public http: HttpClient, private route: ActivatedRoute, private ngZone: NgZone) { 
+  @ViewChild('modalContent')
+  modalContent: TemplateRef<any>;
+
+  constructor(public http: HttpClient, private route: ActivatedRoute,private modal: NgbModal) { 
     console.log('costruttore');
   }
 
@@ -98,6 +108,15 @@ export class CalendarComponent implements OnInit, AfterViewInit{
       default:
         break;
     }
+  }
+
+  onSubmit() { 
+    debugger; 
+  }
+
+  handleEvent(action: string, event: CalendarEvent): void {
+    this.modalData = { event, action };
+    this.modal.open(this.modalContent, { size: 'lg' });
   }
 
   ngOnInit() {

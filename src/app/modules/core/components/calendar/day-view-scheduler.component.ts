@@ -50,9 +50,7 @@ export class DayViewSchedulerCalendarUtils extends CalendarUtils {
     });
     
     //view.users.sort((user1, user2) => user1.name.localeCompare(user2.name));
-    debugger;
     view.events = view.events.map(dayViewEvent => {
-      debugger;
       const index = view.users.indexOf(dayViewEvent.event.meta.user.name);
       dayViewEvent.left = index * EVENT_WIDTH; // change the column of the event
       return dayViewEvent;
@@ -97,7 +95,7 @@ export class DayViewSchedulerComponent extends CalendarDayViewComponent {
   userChanged = new EventEmitter();
 
   eventDragged(dayEvent: DayViewEvent, xPixels: number, yPixels: number): void {
-      debugger;
+      
     if (yPixels !== 0) {
       super.dragEnded(dayEvent, { y: yPixels, x: 0 } as any); // original behaviour
     }
