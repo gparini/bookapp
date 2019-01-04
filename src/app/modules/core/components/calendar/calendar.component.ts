@@ -15,10 +15,13 @@ import { map } from 'rxjs/operators';
 import { CustomDateFormatter } from './custom-date-formatter.provider';
 import { addHours, startOfDay, addMinutes } from 'date-fns';
 import { HttpClient } from '@angular/common/http';
-import { Viewbooking } from './viewbooking';
+import { Viewbooking } from '../../../../model/viewbooking';
 import { ActivatedRoute } from '@angular/router';
 import { initNgModule } from '@angular/core/src/view/ng_module';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { RestService } from '../../../../services/rest.service'
+import { ServiceRequest } from '../../../../model/service.request'
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 const users = [
   {
@@ -58,17 +61,21 @@ export class CalendarComponent implements OnInit, AfterViewInit{
   provaGianni: String = 'ciao3';
   show: boolean = true;
   showGianni: boolean = true;
-
   viewDate: Date = new Date();
   hourSegmentHeight: number = 10;
-
   selectedService: Service;
   selecteServiceAvailability: Availability;
   refresh: Subject<any> = new Subject();
-
   events: CalendarEvent[] = [];
-
   activeDayIsOpen: boolean = true;
+  messageForm: FormGroup;
+  submitted = false ;
+  success = false; 
+
+  //start form
+  name: String;
+  surname: String;
+  //end form
 
   services: Service[] = [
     { id: 'PacchettoA'},
@@ -84,8 +91,16 @@ export class CalendarComponent implements OnInit, AfterViewInit{
   @ViewChild('modalContent')
   modalContent: TemplateRef<any>;
 
-  constructor(public http: HttpClient, private route: ActivatedRoute,private modal: NgbModal) { 
+  constructor(public http: HttpClient, 
+              private route: ActivatedRoute,
+              private modal: NgbModal,
+              private restService: RestService,
+              private formBuilder: FormBuilder) { 
     console.log('costruttore');
+    this.messageForm = this.formBuilder.group({
+      name: ['', Validators.required],
+      surname: ['', Validators.required]
+    })
   }
 
   ngAfterViewInit(){
@@ -112,6 +127,18 @@ export class CalendarComponent implements OnInit, AfterViewInit{
 
   onSubmit() { 
     debugger; 
+    this.submitted = true;
+
+    if (this.messageForm.invalid) {
+      return;
+    }
+
+    let input: ServiceRequest = new ServiceRequest;
+    input.name = this.name;
+    input.surname = this.surname;
+    this.restService.saveBooking(input);
+
+    this.success = true;
   }
 
   handleEvent(action: string, event: CalendarEvent): void {
@@ -166,13 +193,15 @@ formatDate(date) {
     var date = new Date();
     var formattedDate = this.formatDate(date);
     
+    let input: ServiceRequest = new ServiceRequest;
+    input.formattedDate = formattedDate;
     let obs ;
     switch (this.mode) {
       case 'view':
-        obs = this.http.get<Viewbooking>('http://localhost:3000/booking/view/'+formattedDate);
+        obs = this.restService.viewBooking(input);
         break;
       case 'manage':
-        obs = this.http.get<Viewbooking>('http://localhost:3000/booking/manage/'+formattedDate);
+        obs = this.restService.availableBooking(input);
         break;
       default:
         break;

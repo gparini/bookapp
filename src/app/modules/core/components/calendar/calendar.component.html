@@ -15,6 +15,7 @@
       <pre>{{ modalData?.event | json }}</pre>
     </div>
 
+    <!--
     <div>
       <form (ngSubmit)="onSubmit()">
         Nome: <input type="text" name="fname"><br>
@@ -23,6 +24,40 @@
         <button type="submit" class="btn btn-success">Submit</button>
       </form>
     </div>
+  -->
+
+    <form [formGroup]="messageForm" (ngSubmit)="onSubmit()">
+
+      <h5 *ngIf="success">Your form is valid!</h5>
+  
+      <label>
+        Name:
+        <input type="text" formControlName="name" [(ngModel)]="name">
+        <div *ngIf="submitted && messageForm.controls.name.errors" class="error">
+          <div *ngIf="messageForm.controls.name.errors.required">Your name is required</div>
+        </div>
+      </label>
+    
+      <label>
+        Surname:
+        <input type='text' formControlName="surname" [(ngModel)]="surname">
+        <div *ngIf="submitted && messageForm.controls.surname.errors" class="error">
+          <div *ngIf="messageForm.controls.surname.errors.required">A surname is required</div>
+        </div>
+      </label>
+  
+      <input type="submit" value="Send message" class="cta">
+    
+    </form>
+  
+    <div *ngIf="submitted" class="results">
+      <strong>Name:</strong> 
+      <span>{{ messageForm.controls.name.value }}</span>
+  
+      <strong>Surname:</strong> 
+      <span>{{ messageForm.controls.surname.value }}</span>
+    </div>
+  
 
   </div>
   <div class="modal-footer">
