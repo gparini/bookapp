@@ -31,7 +31,7 @@
       <h5 *ngIf="success">Your form is valid!</h5>
   
       <label>
-        Name:
+        Nome:
         <input type="text" formControlName="name" [(ngModel)]="name">
         <div *ngIf="submitted && messageForm.controls.name.errors" class="error">
           <div *ngIf="messageForm.controls.name.errors.required">Your name is required</div>
@@ -39,10 +39,18 @@
       </label>
     
       <label>
-        Surname:
+        Cognome:
         <input type='text' formControlName="surname" [(ngModel)]="surname">
         <div *ngIf="submitted && messageForm.controls.surname.errors" class="error">
           <div *ngIf="messageForm.controls.surname.errors.required">A surname is required</div>
+        </div>
+      </label>
+
+      <label>
+        Cellulare:
+        <input type='text' formControlName="phoneNumber" [(ngModel)]="phoneNumber">
+        <div *ngIf="submitted && messageForm.controls.phoneNumber.errors" class="error">
+          <div *ngIf="messageForm.controls.phoneNumber.errors.required">A phoneNumber is required</div>
         </div>
       </label>
   
@@ -56,6 +64,9 @@
   
       <strong>Surname:</strong> 
       <span>{{ messageForm.controls.surname.value }}</span>
+
+      <strong>phoneNumber:</strong> 
+      <span>{{ messageForm.controls.phoneNumber.value }}</span>      
     </div>
   
 
@@ -81,35 +92,40 @@
 
 <mwl-demo-utils-calendar-header
   [(view)]="view"
-  [(viewDate)]="viewDate">
+  [(viewDate)]="viewDate"
+  (viewDateChange)="fetchEvents()"
+  (viewChange)="fetchEvents()">
 </mwl-demo-utils-calendar-header>
 
-<div [ngSwitch]="view">
-  <mwl-calendar-month-view
-    *ngSwitchCase="'month'"
-    [viewDate]="viewDate"
-    [events]="events"
-    (beforeViewRender)="beforeMonthViewRender($event)"
-    [refresh]="refresh"
-    (dayClicked)="viewDate = $event.day.date; view = 'day'">
-  </mwl-calendar-month-view>
-  <mwl-calendar-week-view
-    *ngSwitchCase="'week'"
-    [hourSegments]="6"
-    [viewDate]="viewDate"
-    [events]="events"
-    [dayStartHour]="9"
-    [dayEndHour]="20"
-    (dayHeaderClicked)="viewDate = $event.day.date; view = 'day'">
-  </mwl-calendar-week-view>
+<div *ngIf="isDataAvailable">
+  <div [ngSwitch]="view">
+    <mwl-calendar-month-view
+      *ngSwitchCase="'month'"
+      [viewDate]="viewDate"
+      [events]="events"
+      (beforeViewRender)="viewDate = $event.day.date; beforeMonthViewRender($event)"
+      [refresh]="refresh"
+      (dayClicked)="viewDate = $event.day.date; view = 'day';  fetchEvents();">
+    </mwl-calendar-month-view>
+    <mwl-calendar-week-view
+      *ngSwitchCase="'week'"
+      [hourSegments]="6"
+      [viewDate]="viewDate"
+      [events]="events"
+      [dayStartHour]="9"
+      [dayEndHour]="20"
+      (dayHeaderClicked)="viewDate = $event.day.date; view = 'day'">
+    </mwl-calendar-week-view>
 
-  <mwl-day-view-scheduler
-  *ngSwitchCase="'day'"
-  [viewDate]="viewDate"
-  [events]="events"
-  [hourSegments]="6"
-  (eventTimesChanged)="eventTimesChanged($event)"
-  (userChanged)="userChanged($event)"
-  (eventClicked)="handleEvent('Clicked', $event.event)">
-</mwl-day-view-scheduler>
+    <mwl-day-view-scheduler
+    *ngSwitchCase="'day'"
+    [viewDate]="viewDate"
+    [events]="events"
+    [hourSegments]="6"
+    (beforeViewRender)="beforeDayViewRender($event)"
+    (eventTimesChanged)="eventTimesChanged($event)"
+    (userChanged)="userChanged($event)"
+    (eventClicked)="handleEvent('Clicked', $event.event);">
+  </mwl-day-view-scheduler>
+  </div>
 </div>

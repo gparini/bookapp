@@ -1,6 +1,20 @@
 export class ServiceRequest {
-    name : String;
-    surname: String;
-    phoneNumber: String;
+    userName : String;
+    userSurname: String;
+    userPhoneNumber: String;
+    userEmail: String;
+    userFacebook: String;
+
     formattedDate: String;
+    bookingId: String;
+
+    bookDate: String;
+    bookStartTime: String;
+    bookEndTime: String;
+    bookMessage: String;
+    bookUserId: String;
+    bookServiceId: String;
+    bookOfficeId: String;
+    bookStaffId: String;
+    bookStaffName: String;
   }

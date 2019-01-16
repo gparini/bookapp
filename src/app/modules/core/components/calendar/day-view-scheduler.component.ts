@@ -1,26 +1,14 @@
 import { Component, EventEmitter, Injectable, Output } from '@angular/core';
-import { CalendarDayViewComponent, CalendarUtils, CalendarDateFormatter} from 'angular-calendar';
+import { CalendarDayViewComponent, CalendarUtils, CalendarDateFormatter, DateAdapter} from 'angular-calendar';
 import { DayView, DayViewEvent, GetDayViewArgs } from 'calendar-utils';
 import { CustomDateFormatter } from './custom-date-formatter.provider';
 import { ActivatedRoute } from '@angular/router';
+import { RestService } from '../../../../services/rest.service'
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { addHours, startOfDay, addMinutes } from 'date-fns';
+import { ServiceRequest } from '../../../../model/service.request'
 
-const EVENT_WIDTH = 150;
-
-const users = [
-    {
-      id: 0,
-      name: 'Slot 1'
-    },
-    {
-      id: 1,
-      name: 'slot 2'
-    },
-    {
-      id: 2,
-      name: 'slot 3'
-    }
-  ];
-  
+const EVENT_WIDTH = 150;  
 
 // extend the interface to add the array of users
 interface DayViewScheduler extends DayView {
@@ -28,20 +16,24 @@ interface DayViewScheduler extends DayView {
 }
 
 @Injectable()
-export class DayViewSchedulerCalendarUtils extends CalendarUtils {
+export class DayViewSchedulerCalendarUtils extends CalendarUtils{
 
   showHead: boolean = false;
+  appParameter: any;
+  restService: RestService;
 
-  // constructor(private route: ActivatedRoute) { 
-  //   super();
-  // }
+  constructor (dateAdapter: DateAdapter, restService: RestService) {
+    super (dateAdapter);
+    this.appParameter = restService.appParameter;
+    this.restService = restService;
+  }
 
   getDayView(args: GetDayViewArgs): DayViewScheduler {
     const view: DayViewScheduler = {
       ...super.getDayView(args),
       users: []
     };
-    users.forEach(({ name }) => {
+    this.appParameter["staff"].forEach(({ name }) => {
       // assumes user objects are the same references,
       // if 2 users have the same structure but different object references this will fail
       if (!view.users.includes(name)) {
@@ -49,15 +41,29 @@ export class DayViewSchedulerCalendarUtils extends CalendarUtils {
       }
     });
     
-    //view.users.sort((user1, user2) => user1.name.localeCompare(user2.name));
-    view.events = view.events.map(dayViewEvent => {
-      const index = view.users.indexOf(dayViewEvent.event.meta.user.name);
-      dayViewEvent.left = index * EVENT_WIDTH; // change the column of the event
-      return dayViewEvent;
-    });
-    view.width = view.users.length * EVENT_WIDTH;
+    // if (this.restService.availableBookingDayObs != undefined) {
+    //   this.restService.availableBookingDayObs.subscribe(res => {
+    //     view.events = view.events.map(dayViewEvent => {
+    //       const index = view.users.indexOf(dayViewEvent.event.meta.user.name);
+    //       dayViewEvent.left = index * EVENT_WIDTH; // change the column of the event
+    //       return dayViewEvent;
+    //     });
+    //     view.width = view.users.length * EVENT_WIDTH;
+    //   });
+    // }
+    // } else {
+      view.events = view.events.map(dayViewEvent => {
+        const index = view.users.indexOf(dayViewEvent.event.meta.user.name);
+        dayViewEvent.left = index * EVENT_WIDTH; // change the column of the event
+        return dayViewEvent;
+      });
+      view.width = view.users.length * EVENT_WIDTH;
+    // }
+
+
     return view;
   }
+
 }
 
 @Component({
@@ -111,4 +117,6 @@ export class DayViewSchedulerComponent extends CalendarDayViewComponent {
       }
     }
   }
+
+
 }
