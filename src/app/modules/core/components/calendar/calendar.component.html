@@ -76,6 +76,16 @@
   </div>
 </ng-template>
 
+<ng-template #modalCancel let-close="close">
+  <div class="modal-header">
+     <form [formGroup]="messageForm" (ngSubmit)="onSubmitCancel()">  
+      <input type="submit" value="Cancella prenotazione" class="cta">
+    
+    </form>
+
+  </div>
+</ng-template>
+
 <h2>Services</h2>
 
 {{provaGianni}}

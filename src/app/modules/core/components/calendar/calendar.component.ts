@@ -89,6 +89,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   @ViewChild('modalContent')
   modalContent: TemplateRef<any>;
 
+  @ViewChild('modalCancel')
+  modalCancel: TemplateRef<any>;
+
   constructor(public http: HttpClient,
     private route: ActivatedRoute,
     private modal: NgbModal,
@@ -148,7 +151,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     }
 
     let input: ServiceRequest = new ServiceRequest;
-
+    debugger;
     input.userName = this.name;
     input.userSurname = this.surname;
     input.userPhoneNumber = this.phoneNumber;
@@ -156,7 +159,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     input.bookEndTime = event.meta.book.end.substr(9, 4);
     input.bookDate = event.meta.book.start.substr(0, 8);
     input.bookMessage = "";
-    input.bookOfficeId = event.meta.user.id;
+    input.bookOfficeId = event.meta.user.officeId;
     input.bookServiceId = event.meta.book.serviceId;
     input.bookStaffId = event.meta.user.id;
     input.bookStaffName = event.meta.user.name;
@@ -171,9 +174,30 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.success = true;
   }
 
+  onSubmitCancel() {
+
+    let input: ServiceRequest = new ServiceRequest;
+    debugger;
+    input.bookId = this.modalData.event.meta.book.id;
+
+    let saveObs = this.restService.cancelBooking(input);
+    saveObs.subscribe((res) => {
+      console.log(res);
+    });
+  }
+
   handleEvent(action: string, event: CalendarEvent): void {
     this.modalData = { event, action };
-    this.modal.open(this.modalContent, { size: 'lg' });
+    switch (this.mode) {
+      case "view":
+         this.modal.open(this.modalCancel, { size: 'lg' });
+        break;
+      case "manage":
+         this.modal.open(this.modalContent, { size: 'lg' });
+        break;
+      default:
+        break;
+    }
   }
 
   ngOnInit() {
@@ -280,7 +304,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       let staff = this.appParameter.staff;
       staff.forEach(element => {
         var title = element.name;
-        if (this.mode === 'view' || (book[title] !== undefined && book[title].availableForService))
+        if ((book.staffId === element.id && this.mode === 'view') || (book[title] !== undefined && book[title].availableForService))
           this.events.push(
             {
               title: book.username + "\n" + book.service,

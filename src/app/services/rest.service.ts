@@ -35,7 +35,7 @@ export class RestService {
   }
 
   cancelBooking (req: ServiceRequest) {
-    return this.http.get<string>('http://localhost:3000/booking/cancelBooking/'+req.bookingId);
+    return this.http.delete<string>('http://localhost:3000/booking/cancelBooking/'+req.bookId);
   }
 
   availableBookingDay (req: ServiceRequest) {

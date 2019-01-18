@@ -8,6 +8,7 @@ export class ServiceRequest {
     formattedDate: String;
     bookingId: String;
 
+    bookId: String;
     bookDate: String;
     bookStartTime: String;
     bookEndTime: String;
