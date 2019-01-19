@@ -64,7 +64,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   showGianni: boolean = true;
   viewDate: Date = new Date();
   hourSegmentHeight: number = 10;
-  selectedService: Service;
+  selectedService: String;
   selecteServiceAvailability: Availability;
   refresh: Subject<any> = new Subject();
   events: CalendarEvent[] = [];
@@ -73,6 +73,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   messageForm: FormGroup;
   submitted = false;
   success = false;
+  serviceList = [];
+  favoriteSeason: string;
+  seasons: string[] = ['Winter', 'Spring', 'Summer', 'Autumn'];
 
   //start form
   name: String;
@@ -91,6 +94,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   @ViewChild('modalCancel')
   modalCancel: TemplateRef<any>;
+
+  @ViewChild('modalService')
+  modalService: TemplateRef<any>;
 
   constructor(public http: HttpClient,
     private route: ActivatedRoute,
@@ -114,26 +120,33 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       //debugger;
       this.appParameter = res["input"];
       this.restService.appParameter = this.appParameter;
+      this.serviceList = [];
+
+      var map = this.appParameter.service;
+      var serviceList = [];
+      //debugger;
+      Object.keys(map).forEach(function (key) {
+        var elem = map[key];
+        serviceList.push(elem);
+      });
+      this.serviceList = serviceList;
+
       //this.initMonthView()
       console.log(res);
-
+      //debugger;
+      if (this.mode === 'manage') {
+        this.modal.open(this.modalService, { size: 'lg' });
+      }
     });
   }
 
   ngAfterViewInit() {
     console.log("prova");
+    //debugger;
     switch (this.mode) {
       case 'view':
-        this.show = true;
-        this.showGianni = true;
-        this.provaGianni = 'p1';
-
-        //this.retrieveAvailability('PacchettoA');
         break;
       case 'manage':
-        this.show = false;
-        this.showGianni = false;
-        this.provaGianni = 'p2';
         break;
       default:
         break;
@@ -151,7 +164,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     }
 
     let input: ServiceRequest = new ServiceRequest;
-    debugger;
+    //debugger;
     input.userName = this.name;
     input.userSurname = this.surname;
     input.userPhoneNumber = this.phoneNumber;
@@ -177,7 +190,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   onSubmitCancel() {
 
     let input: ServiceRequest = new ServiceRequest;
-    debugger;
+    //debugger;
     input.bookId = this.modalData.event.meta.book.id;
 
     let saveObs = this.restService.cancelBooking(input);
@@ -190,10 +203,10 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.modalData = { event, action };
     switch (this.mode) {
       case "view":
-         this.modal.open(this.modalCancel, { size: 'lg' });
+        this.modal.open(this.modalCancel, { size: 'lg' });
         break;
       case "manage":
-         this.modal.open(this.modalContent, { size: 'lg' });
+        this.modal.open(this.modalContent, { size: 'lg' });
         break;
       default:
         break;
@@ -209,7 +222,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
     });
 
-    this.fetchEvents();
+    //this.fetchEvents();
+    this.isDataAvailable = true;
   }
 
   updateComponent(modeInput) {
@@ -255,6 +269,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
     let input: ServiceRequest = new ServiceRequest;
     input.formattedDate = formattedDate;
+    input.bookServiceId = this.selectedService;
     let obs;
     switch (this.mode) {
       case 'view':
@@ -277,24 +292,25 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   getForDayViewAndManage(res) {
     var object = res['input'];
+    this.events = [];
 
     for (var key in object) {
       console.log(key);
       var book = object[key];
 
-      var start ;
-      var end ;
+      var start;
+      var end;
       switch (this.mode) {
         case 'view':
-          start = book.date+"."+book.startTime;
-          end = book.date+"."+book.endTime;
-        break;
+          start = book.date + "." + book.startTime;
+          end = book.date + "." + book.endTime;
+          break;
         case 'manage':
           start = book.start;
           end = book.end;
-        break;
+          break;
         default:
-        break;
+          break;
       }
       let dateCur = this.parseDate(start);
 
@@ -304,10 +320,11 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       let staff = this.appParameter.staff;
       staff.forEach(element => {
         var title = element.name;
+        //debugger;
         if ((book.staffId === element.id && this.mode === 'view') || (book[title] !== undefined && book[title].availableForService))
           this.events.push(
             {
-              title: book.username + "\n" + book.service,
+              title: "Ore: "+book.slot + " " + element.name,
               start: startT,
               end: endT,
               meta: {
@@ -389,27 +406,27 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.selecteServiceAvailability = mapMonthBookings;
   }
 
-  retrieveAvailability(selectedService: String): void {
+  // retrieveAvailability(selectedService: String): void {
 
-    switch (selectedService) {
-      case 'PacchettoA':
-        this.selecteServiceAvailability = { '02': null, '12': null, '13': null, '15': null, '21': null, '25': null };
-        break;
-      case 'PacchettoB':
-        this.selecteServiceAvailability = { '03': null, '04': null, '05': null };
-        break;
-      case 'PacchettoC':
-        this.selecteServiceAvailability = { '06': null, '07': null, '08': null };
-        break;
-      default:
-        break;
-    }
-  }
+  //   switch (selectedService) {
+  //     case 'PacchettoA':
+  //       this.selecteServiceAvailability = { '02': null, '12': null, '13': null, '15': null, '21': null, '25': null };
+  //       break;
+  //     case 'PacchettoB':
+  //       this.selecteServiceAvailability = { '03': null, '04': null, '05': null };
+  //       break;
+  //     case 'PacchettoC':
+  //       this.selecteServiceAvailability = { '06': null, '07': null, '08': null };
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // }
 
   onSelect(service: Service): void {
-    this.selectedService = service;
-    this.retrieveAvailability(this.selectedService.id);
-    this.refreshView();
+    // this.selectedService = service;
+    // this.retrieveAvailability(this.selectedService.id);
+    // this.refreshView();
   }
 
   eventTimesChanged({
@@ -438,5 +455,11 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.isDataAvailable = false;
     obs.subscribe(() =>
       this.isDataAvailable = true);
+  }
+
+  updateOnclose(): void {
+    debugger;
+    this.fetchEvents();
+    this.refreshView();
   }
 }

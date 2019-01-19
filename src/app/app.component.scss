@@ -3,3 +3,31 @@
 @import url("https://unpkg.com/font-awesome@4.7.0/css/font-awesome.css");
 @import url("https://unpkg.com/angular-calendar@0.26.3/css/angular-calendar.css");
 @import url("https://unpkg.com/flatpickr@4.5.2/dist/flatpickr.css");
+
+.navbar {
+width:100%;
+height:40px;
+}
+
+.navbar ul {
+width:80%;
+margin:0 auto 0 auto;
+}
+
+.navbar ul li {
+float:left;
+color:#CC0000;
+padding:0 20px 0 20px;
+border-right:1px solid #FFF;
+border-left:1px solid #FFF;
+height:40px;
+list-style:none;
+display:block;
+line-height:40px;
+text-align:center;
+cursor:pointer;
+}
+
+.navbar ul li:hover {
+background-color:#CCC;
+}

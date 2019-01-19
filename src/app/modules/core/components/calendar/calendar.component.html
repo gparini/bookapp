@@ -1,35 +1,16 @@
 <ng-template #modalContent let-close="close">
   <div class="modal-header">
-    <h5 class="modal-title">Event action occurred</h5>
+    <h5 class="modal-title">Dati prenotazione</h5>
     <button type="button" class="close" (click)="close()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
-    <div>
-      Action:
-      <pre>{{ modalData?.action }}</pre>
-    </div>
-    <div>
-      Event:
-      <pre>{{ modalData?.event | json }}</pre>
-    </div>
-
-    <!--
-    <div>
-      <form (ngSubmit)="onSubmit()">
-        Nome: <input type="text" name="fname"><br>
-        Cognome: <input type="text" name="lname"><br>
-        Cellulare: <input type="text" name="lname"><br>
-        <button type="submit" class="btn btn-success">Submit</button>
-      </form>
-    </div>
-  -->
 
     <form [formGroup]="messageForm" (ngSubmit)="onSubmit()">
 
-      <h5 *ngIf="success">Your form is valid!</h5>
-  
+      <h5 *ngIf="success">Inserimento corretto!</h5>
+
       <label>
         Nome:
         <input type="text" formControlName="name" [(ngModel)]="name">
@@ -37,7 +18,7 @@
           <div *ngIf="messageForm.controls.name.errors.required">Your name is required</div>
         </div>
       </label>
-    
+
       <label>
         Cognome:
         <input type='text' formControlName="surname" [(ngModel)]="surname">
@@ -53,39 +34,65 @@
           <div *ngIf="messageForm.controls.phoneNumber.errors.required">A phoneNumber is required</div>
         </div>
       </label>
-  
+
       <input type="submit" value="Send message" class="cta">
-    
+
     </form>
-  
+
     <div *ngIf="submitted" class="results">
-      <strong>Name:</strong> 
+      <strong>Name:</strong>
       <span>{{ messageForm.controls.name.value }}</span>
-  
-      <strong>Surname:</strong> 
+
+      <strong>Surname:</strong>
       <span>{{ messageForm.controls.surname.value }}</span>
 
-      <strong>phoneNumber:</strong> 
-      <span>{{ messageForm.controls.phoneNumber.value }}</span>      
+      <strong>phoneNumber:</strong>
+      <span>{{ messageForm.controls.phoneNumber.value }}</span>
     </div>
-  
+
 
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary" (click)="close()">OK</button>
+    <button type="button" class="btn btn-outline-secondary" (click)="close(); updateOnclose();">OK</button>
   </div>
 </ng-template>
 
 <ng-template #modalCancel let-close="close">
   <div class="modal-header">
-     <form [formGroup]="messageForm" (ngSubmit)="onSubmitCancel()">  
+    <form [formGroup]="messageForm" (ngSubmit)="onSubmitCancel()">
       <input type="submit" value="Cancella prenotazione" class="cta">
-    
+
     </form>
 
   </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="close(); updateOnclose();">OK</button>
+  </div>
 </ng-template>
 
+<div *ngIf="mode === 'manage'">
+  <ng-template #modalService let-close="close">
+    <div class="modal-header">
+      <h5 class="modal-title">Scegli servizio</h5>
+      <button type="button" class="close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <mat-radio-group class="example-radio-group" [(ngModel)]="selectedService">
+        <mat-radio-button class="example-radio-button" *ngFor="let service of serviceList" [value]="service.id">
+          {{service.description}}
+        </mat-radio-button>
+      </mat-radio-group>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" (click)="close(); updateOnclose();">OK</button>
+    </div>
+  </ng-template>
+</div>
+
+<!-- 
 <h2>Services</h2>
 
 {{provaGianni}}
@@ -97,45 +104,24 @@
       (click)="onSelect(service)">
       <span class="serv">{{service.id}}</span>
   </li>
-</ul>
+</ul> -->
 
 
-<mwl-demo-utils-calendar-header
-  [(view)]="view"
-  [(viewDate)]="viewDate"
-  (viewDateChange)="fetchEvents()"
-  (viewChange)="fetchEvents()">
+<mwl-demo-utils-calendar-header [(view)]="view" [(viewDate)]="viewDate" (viewDateChange)="fetchEvents()" (viewChange)="fetchEvents()">
 </mwl-demo-utils-calendar-header>
 
 <div *ngIf="isDataAvailable">
   <div [ngSwitch]="view">
-    <mwl-calendar-month-view
-      *ngSwitchCase="'month'"
-      [viewDate]="viewDate"
-      [events]="events"
-      (beforeViewRender)="viewDate = $event.day.date; beforeMonthViewRender($event)"
-      [refresh]="refresh"
-      (dayClicked)="viewDate = $event.day.date; view = 'day';  fetchEvents();">
+    <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" (beforeViewRender)="viewDate = $event.day.date; beforeMonthViewRender($event)"
+      [refresh]="refresh" (dayClicked)="viewDate = $event.day.date; view = 'day';  fetchEvents();">
     </mwl-calendar-month-view>
-    <mwl-calendar-week-view
-      *ngSwitchCase="'week'"
-      [hourSegments]="6"
-      [viewDate]="viewDate"
-      [events]="events"
-      [dayStartHour]="9"
-      [dayEndHour]="20"
-      (dayHeaderClicked)="viewDate = $event.day.date; view = 'day'">
+    <mwl-calendar-week-view *ngSwitchCase="'week'" [hourSegments]="6" [viewDate]="viewDate" [events]="events"
+      [dayStartHour]="9" [dayEndHour]="22" (dayHeaderClicked)="viewDate = $event.day.date; view = 'day'">
     </mwl-calendar-week-view>
 
-    <mwl-day-view-scheduler
-    *ngSwitchCase="'day'"
-    [viewDate]="viewDate"
-    [events]="events"
-    [hourSegments]="6"
-    (beforeViewRender)="beforeDayViewRender($event)"
-    (eventTimesChanged)="eventTimesChanged($event)"
-    (userChanged)="userChanged($event)"
-    (eventClicked)="handleEvent('Clicked', $event.event);">
-  </mwl-day-view-scheduler>
+    <mwl-day-view-scheduler *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="events" [hourSegments]="6"
+      (beforeViewRender)="beforeDayViewRender($event)" (eventTimesChanged)="eventTimesChanged($event)" (userChanged)="userChanged($event)"
+      (eventClicked)="handleEvent('Clicked', $event.event);" [dayStartHour]="9" [dayEndHour]="22">>
+    </mwl-day-view-scheduler>
   </div>
 </div>

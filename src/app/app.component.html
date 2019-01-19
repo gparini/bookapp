@@ -1,10 +1,11 @@
 <nav >
-  <div class="container">
-      <a >Angular Router</a>
+  <div class="container navbar">
+      <a >BookApp</a>
       <ul routerLinkActive="active">
-          <li class="nav-item"><a class="nav-link" routerLink="demo">demo</a></li>
-          <li class="nav-item"><a class="nav-link" [routerLink]="['calendarView', 'view']">visualizza</a></li>
-          <li class="nav-item"><a class="nav-link" [routerLink]="['calendarManage', 'manage']">prenota</a></li>
+          <li><a class="btn btn-primary" [class.active]="mode === 'view'"
+            href="#" role="button" [routerLink]="['calendarView', 'view']">visualizza</a></li>
+          <li><a class="btn btn-primary" [class.active]="mode === 'manage'"
+            href="#" role="button" [routerLink]="['calendarManage', 'manage']">prenota</a></li>
       </ul>
   </div>
 </nav>

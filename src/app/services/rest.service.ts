@@ -40,12 +40,12 @@ export class RestService {
 
   availableBookingDay (req: ServiceRequest) {
     debugger;
-    this.availableBookingDayObs = this.http.get<string>('http://localhost:3000/booking/availableBooking/'+req.formattedDate+"/1");;
+    this.availableBookingDayObs = this.http.get<string>('http://localhost:3000/booking/availableBooking/'+req.formattedDate+"/"+req.bookServiceId);;
     return this.availableBookingDayObs;
   }
   
   availableBookingMonth (req: ServiceRequest) {
-    this.availableBookingDayObs = this.http.get<string>('http://localhost:3000/booking/availableBooking/'+req.formattedDate+"/1");;
+    this.availableBookingDayObs = this.http.get<string>('http://localhost:3000/booking/availableBooking/'+req.formattedDate+"/"+req.bookServiceId);;
     return this.availableBookingDayObs;
   }
 

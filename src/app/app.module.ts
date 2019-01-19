@@ -14,6 +14,7 @@ import { DemoUtilsModule } from './modules/core/components/demo-utils/module';
 import { DemoModule } from './modules/core/components/demo/module';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { DayViewSchedulerComponent } from './modules/core/components/calendar/day-view-scheduler.component';
+import { MatRadioModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { DayViewSchedulerComponent } from './modules/core/components/calendar/da
       provide: DateAdapter,
       useFactory: adapterFactory
     }),
-    FlatpickrModule.forRoot()
+    FlatpickrModule.forRoot(),
+    MatRadioModule
   ],
   providers: [],
   bootstrap: [AppComponent]
