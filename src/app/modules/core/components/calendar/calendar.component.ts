@@ -76,6 +76,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   serviceList = [];
   favoriteSeason: string;
   seasons: string[] = ['Winter', 'Spring', 'Summer', 'Autumn'];
+  errorMessage: string;
 
   //start form
   name: String;
@@ -98,6 +99,10 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   @ViewChild('modalService')
   modalService: TemplateRef<any>;
 
+
+  @ViewChild('modalError')
+  modalError: TemplateRef<any>;
+
   constructor(public http: HttpClient,
     private route: ActivatedRoute,
     private modal: NgbModal,
@@ -116,28 +121,32 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     input.userPhoneNumber = this.phoneNumber;
     //debugger;
     this.parameterObserver = this.restService.getParameters(input);
-    this.parameterObserver.subscribe((res) => {
-      //debugger;
-      this.appParameter = res["input"];
-      this.restService.appParameter = this.appParameter;
-      this.serviceList = [];
+    this.parameterObserver.subscribe(
+      (res) => {
+        //debugger;
+        this.appParameter = res["input"];
+        this.restService.appParameter = this.appParameter;
+        this.serviceList = [];
 
-      var map = this.appParameter.service;
-      var serviceList = [];
-      //debugger;
-      Object.keys(map).forEach(function (key) {
-        var elem = map[key];
-        serviceList.push(elem);
+        var map = this.appParameter.service;
+        var serviceList = [];
+        //debugger;
+        Object.keys(map).forEach(function (key) {
+          var elem = map[key];
+          serviceList.push(elem);
+        });
+        this.serviceList = serviceList;
+
+        //this.initMonthView()
+        console.log(res);
+        //debugger;
+        if (this.mode === 'manage') {
+          this.modal.open(this.modalService, { size: 'lg' });
+        }
+      },
+      (err) => {
+        this.modal.open(this.modalError, { size: 'lg' });
       });
-      this.serviceList = serviceList;
-
-      //this.initMonthView()
-      console.log(res);
-      //debugger;
-      if (this.mode === 'manage') {
-        this.modal.open(this.modalService, { size: 'lg' });
-      }
-    });
   }
 
   ngAfterViewInit() {
@@ -182,7 +191,16 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     let saveObs = this.restService.saveBooking(input);
     saveObs.subscribe((res) => {
       console.log(res);
-    });
+      if (res["input"] !== "OK") {
+        this.errorMessage = res["input"]["err"].code;
+        this.modal.dismissAll("");
+        this.modal.open(this.modalError, { size: 'lg' });
+      }
+    },
+      (err) => {
+        this.errorMessage = err;
+        this.modal.open(this.modalError, { size: 'lg' });
+      });
 
     this.success = true;
   }
@@ -258,11 +276,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     return "" + year + monthTempPadde + dayTempPadde;
   }
 
-  beforeDayViewRender({ body }: { body: CalendarMonthViewDay[] }): void {
-    //debugger;
-    //this.initDayView();
-  }
-
   initDayView() {
     var date = this.viewDate;
     var formattedDate = this.formatDate(date);
@@ -324,7 +337,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         if ((book.staffId === element.id && this.mode === 'view') || (book[title] !== undefined && book[title].availableForService))
           this.events.push(
             {
-              title: "Ore: "+book.slot + " " + element.name,
+              title: "Ore: " + book.slot + " " + element.name,
               start: startT,
               end: endT,
               meta: {
@@ -406,29 +419,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.selecteServiceAvailability = mapMonthBookings;
   }
 
-  // retrieveAvailability(selectedService: String): void {
-
-  //   switch (selectedService) {
-  //     case 'PacchettoA':
-  //       this.selecteServiceAvailability = { '02': null, '12': null, '13': null, '15': null, '21': null, '25': null };
-  //       break;
-  //     case 'PacchettoB':
-  //       this.selecteServiceAvailability = { '03': null, '04': null, '05': null };
-  //       break;
-  //     case 'PacchettoC':
-  //       this.selecteServiceAvailability = { '06': null, '07': null, '08': null };
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // }
-
-  onSelect(service: Service): void {
-    // this.selectedService = service;
-    // this.retrieveAvailability(this.selectedService.id);
-    // this.refreshView();
-  }
-
   eventTimesChanged({
     event,
     newStart,
@@ -446,7 +436,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 
   refreshView(): void {
-    debugger;
     this.refresh.next();
   }
 
@@ -458,7 +447,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 
   updateOnclose(): void {
-    debugger;
     this.fetchEvents();
     this.refreshView();
   }

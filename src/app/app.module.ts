@@ -5,7 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { UserTestComponent } from './modules/core/components/user-test/user-test.component';
 import { CalendarComponent } from './modules/core/components/calendar/calendar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
@@ -19,7 +18,6 @@ import { MatRadioModule } from '@angular/material';
 @NgModule({
   declarations: [
     AppComponent,
-    UserTestComponent,
     CalendarComponent,
     DayViewSchedulerComponent
   ],

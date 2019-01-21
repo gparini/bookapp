@@ -1,3 +1,14 @@
+<ng-template #modalError let-close="close">
+    <div class="modal-header">
+        <div >Errore durante la connessione</div>
+        <div >Ricaricare la pagina per riprovare.</div>
+        <div >{{errorMessage}}</div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" (click)="close(); updateOnclose();">OK</button>
+    </div>
+  </ng-template>
+
 <ng-template #modalContent let-close="close">
   <div class="modal-header">
     <h5 class="modal-title">Dati prenotazione</h5>
