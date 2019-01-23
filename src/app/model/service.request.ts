@@ -1,4 +1,8 @@
 export class ServiceRequest {
+
+    userId: String;
+    password: String;
+    
     userName : String;
     userSurname: String;
     userPhoneNumber: String;

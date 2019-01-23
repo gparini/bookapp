@@ -1,4 +1,4 @@
-<nav >
+<!-- <nav >
   <div class="container navbar">
       <a >BookApp</a>
       <ul routerLinkActive="active">
@@ -8,6 +8,22 @@
             href="#" role="button" [routerLink]="['calendarManage', 'manage']">prenota</a></li>
       </ul>
   </div>
-</nav>
+</nav> -->
+
+<!--The content below is only a placeholder and can be replaced.-->
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <!--  <span>HOME</span> -->
+     <span><a href="/">HOME</a></span>
+     <span class="spacer"></span>
+     <a class="btn btn-primary" [class.active]="mode === 'view'"
+      href="#" role="button" [routerLink]="['calendarView', 'view']">visualizza</a>
+     <a class="btn btn-primary" [class.active]="mode === 'manage'"
+      href="#" role="button" [routerLink]="['calendarManage', 'manage']">prenota</a>
+     <a mat-button routerLink="/register">Register</a>
+     <a mat-button routerLink="/login">Login</a>
+  </mat-toolbar-row>
+</mat-toolbar>
 
 <router-outlet></router-outlet>
+

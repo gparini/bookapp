@@ -14,12 +14,17 @@ import { DemoModule } from './modules/core/components/demo/module';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { DayViewSchedulerComponent } from './modules/core/components/calendar/day-view-scheduler.component';
 import { MatRadioModule } from '@angular/material';
+import { RegistrationComponentComponent } from './modules/core/components/registration-component/registration-component.component';
+import { LoginComponentComponent } from './modules/core/components/login-component/login-component.component';
+import { MyMaterialModule } from  './material.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     CalendarComponent,
-    DayViewSchedulerComponent
+    DayViewSchedulerComponent,
+    RegistrationComponentComponent,
+    LoginComponentComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +40,8 @@ import { MatRadioModule } from '@angular/material';
       useFactory: adapterFactory
     }),
     FlatpickrModule.forRoot(),
-    MatRadioModule
+    MatRadioModule,
+    MyMaterialModule
   ],
   providers: [],
   bootstrap: [AppComponent]

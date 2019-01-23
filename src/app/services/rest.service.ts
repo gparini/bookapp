@@ -22,6 +22,7 @@ export class RestService {
   viewBookingMonthObservable: any;
   availableBookingMonthObservale: any;
   availableBookingDayObs: any;
+  loginObservable: any;
 
   constructor(public http: HttpClient) { }
 
@@ -55,5 +56,14 @@ export class RestService {
 
   getParameters (req: ServiceRequest) {
     return this.http.get<string>('http://localhost:3000/parameters/parameters');
+  }
+
+  login (req: ServiceRequest) {
+    this.loginObservable = this.http.post('http://localhost:3000/login', JSON.stringify(req), httpOptions);
+    return this.loginObservable;
+  }
+
+  logout (req: ServiceRequest) {
+    return this.http.get<string>('http://localhost:3000/logout');
   }
 }
