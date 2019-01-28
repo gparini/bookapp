@@ -14,7 +14,7 @@ export class LoginComponentComponent implements OnInit {
 
   userId: String;
   password: String;
-  loginObserver: sny;
+  loginObserver: any;
 
   constructor(private restService: RestService, private router: Router) { }
 
@@ -29,8 +29,7 @@ export class LoginComponentComponent implements OnInit {
     input.password = this.password;
     this.loginObserver = this.restService.login(input);
     this.loginObserver.subscribe(
-      (res) => 
-      {
+      (res) => {
         debugger;
         if (res.esito === 'OK') {
           this.router.navigate(['/calendarView/view'])
@@ -39,7 +38,6 @@ export class LoginComponentComponent implements OnInit {
       (err) => {
         debugger
       });
-    )
   }
 
 }

@@ -22,6 +22,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RestService } from '../../../../services/rest.service'
 import { ServiceRequest } from '../../../../model/service.request'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { delay, share } from 'rxjs/operators';
 
 // const users = [
 //   {
@@ -77,6 +79,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   favoriteSeason: string;
   seasons: string[] = ['Winter', 'Spring', 'Summer', 'Autumn'];
   errorMessage: string;
+  eventObservable$: Observable<{}>;
 
   //start form
   name: String;
@@ -107,7 +110,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private modal: NgbModal,
     private restService: RestService,
-    private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder,
+    private router: Router) {
     console.log('costruttore');
     this.messageForm = this.formBuilder.group({
       name: ['', Validators.required],
@@ -123,7 +127,11 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.parameterObserver = this.restService.getParameters(input);
     this.parameterObserver.subscribe(
       (res) => {
-        //debugger;
+        debugger;
+        if (res['esito'] === 'KO') {
+          this.router.navigate(['/login'])
+        }
+
         this.appParameter = res["input"];
         this.restService.appParameter = this.appParameter;
         this.serviceList = [];
@@ -150,8 +158,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    console.log("prova");
-    //debugger;
+    debugger;
     switch (this.mode) {
       case 'view':
         break;
@@ -160,6 +167,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       default:
         break;
     }
+
+    this.fetchEvents();
+    this.refreshView();
   }
 
   onSubmit() {
@@ -190,7 +200,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
     let saveObs = this.restService.saveBooking(input);
     saveObs.subscribe((res) => {
-      console.log(res);
       if (res["input"] !== "OK") {
         this.errorMessage = res["input"]["err"].code;
         this.modal.dismissAll("");
@@ -284,6 +293,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     input.formattedDate = formattedDate;
     input.bookServiceId = this.selectedService;
     let obs;
+    debugger
     switch (this.mode) {
       case 'view':
         obs = this.restService.viewBookingDay(input);
@@ -295,6 +305,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         break;
     }
 
+    this.eventObservable$ = obs.pipe(share());
 
     obs.subscribe((res) => {
       this.getForDayViewAndManage(res);
@@ -308,7 +319,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.events = [];
 
     for (var key in object) {
-      console.log(key);
       var book = object[key];
 
       var start;
@@ -333,7 +343,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       let staff = this.appParameter.staff;
       staff.forEach(element => {
         var title = element.name;
-        //debugger;
+        debugger;
         if ((book.staffId === element.id && this.mode === 'view') || (book[title] !== undefined && book[title].availableForService))
           this.events.push(
             {
@@ -447,7 +457,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 
   updateOnclose(): void {
-    this.fetchEvents();
-    this.refreshView();
+    // this.fetchEvents();
+    // this.refreshView();
   }
 }

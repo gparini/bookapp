@@ -17,6 +17,7 @@ import { MatRadioModule } from '@angular/material';
 import { RegistrationComponentComponent } from './modules/core/components/registration-component/registration-component.component';
 import { LoginComponentComponent } from './modules/core/components/login-component/login-component.component';
 import { MyMaterialModule } from  './material.module';
+import { LogoutComponentComponent } from './modules/core/components/logout-component/logout-component.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { MyMaterialModule } from  './material.module';
     CalendarComponent,
     DayViewSchedulerComponent,
     RegistrationComponentComponent,
-    LoginComponentComponent
+    LoginComponentComponent,
+    LogoutComponentComponent
   ],
   imports: [
     BrowserModule,

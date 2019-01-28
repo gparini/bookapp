@@ -10,11 +10,12 @@
   </div>
 </nav> -->
 
+
 <!--The content below is only a placeholder and can be replaced.-->
 <mat-toolbar color="primary">
   <mat-toolbar-row>
     <!--  <span>HOME</span> -->
-     <span><a href="/">HOME</a></span>
+     <span><a href="/" >pArish</a></span>
      <span class="spacer"></span>
      <a class="btn btn-primary" [class.active]="mode === 'view'"
       href="#" role="button" [routerLink]="['calendarView', 'view']">visualizza</a>
@@ -22,8 +23,11 @@
       href="#" role="button" [routerLink]="['calendarManage', 'manage']">prenota</a>
      <a mat-button routerLink="/register">Register</a>
      <a mat-button routerLink="/login">Login</a>
+     <a mat-button routerLink="/logout">Logout</a>
   </mat-toolbar-row>
 </mat-toolbar>
 
-<router-outlet></router-outlet>
+<div style="margin-top: 30px">
+  <router-outlet></router-outlet>
+</div>
 

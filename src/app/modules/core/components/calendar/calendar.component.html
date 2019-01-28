@@ -1,13 +1,13 @@
 <ng-template #modalError let-close="close">
-    <div class="modal-header">
-        <div >Errore durante la connessione</div>
-        <div >Ricaricare la pagina per riprovare.</div>
-        <div >{{errorMessage}}</div>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-outline-secondary" (click)="close(); updateOnclose();">OK</button>
-    </div>
-  </ng-template>
+  <div class="modal-header">
+    <div>Errore durante la connessione</div>
+    <div>Ricaricare la pagina per riprovare.</div>
+    <div>{{errorMessage}}</div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="close(); updateOnclose();">OK</button>
+  </div>
+</ng-template>
 
 <ng-template #modalContent let-close="close">
   <div class="modal-header">
@@ -103,25 +103,20 @@
   </ng-template>
 </div>
 
-<!-- 
-<h2>Services</h2>
-
-{{provaGianni}}
-{{showGianni}}
-
-<ul class="services" *ngIf="show">
-  <li *ngFor="let service of services" 
-      [class.selected]="service === selectedService"
-      (click)="onSelect(service)">
-      <span class="serv">{{service.id}}</span>
-  </li>
-</ul> -->
-
 
 <mwl-demo-utils-calendar-header [(view)]="view" [(viewDate)]="viewDate" (viewDateChange)="fetchEvents()" (viewChange)="fetchEvents()">
 </mwl-demo-utils-calendar-header>
 
-<div *ngIf="isDataAvailable">
+<ng-template #loading>
+  <div class="text-center">
+    <i class="fa fa-spin fa-spinner fa-5x"></i>
+    <br>
+    Loading events...
+  </div>
+</ng-template>
+
+<!-- <div *ngIf="isDataAvailable"> -->
+<div *ngIf="eventObservable$ | async; else loading ">  
   <div [ngSwitch]="view">
     <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" (beforeViewRender)="viewDate = $event.day.date; beforeMonthViewRender($event)"
       [refresh]="refresh" (dayClicked)="viewDate = $event.day.date; view = 'day';  fetchEvents();">
