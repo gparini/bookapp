@@ -13,6 +13,9 @@ const httpOptions = {
   withCredentials: true,
 };
 
+//const serviceUrl = 'http://localhost:3000';
+const serviceUrl = 'https://bookappservices.herokuapp.com';
+
 
 @Injectable({
   providedIn: 'root'
@@ -29,43 +32,43 @@ export class RestService {
   constructor(public http: HttpClient) { }
 
   viewBookingMonth (req: ServiceRequest) {
-    this.viewBookingMonthObservable = this.http.get<string>('http://localhost:3000/booking/viewMonth/'+req.formattedDate, httpOptions);
+    this.viewBookingMonthObservable = this.http.get<string>(serviceUrl+'/booking/viewMonth/'+req.formattedDate, httpOptions);
     return this.viewBookingMonthObservable;
   }
 
   viewBookingDay (req: ServiceRequest) {
-    return this.http.get<string>('http://localhost:3000/booking/viewDay/'+req.formattedDate, httpOptions);
+    return this.http.get<string>(serviceUrl+'/booking/viewDay/'+req.formattedDate, httpOptions);
   }
 
   cancelBooking (req: ServiceRequest) {
-    return this.http.delete<string>('http://localhost:3000/booking/cancelBooking/'+req.bookId, httpOptions);
+    return this.http.delete<string>(serviceUrl+'/booking/cancelBooking/'+req.bookId, httpOptions);
   }
 
   availableBookingDay (req: ServiceRequest) {
     debugger;
-    this.availableBookingDayObs = this.http.get<string>('http://localhost:3000/booking/availableBooking/'+req.formattedDate+"/"+req.bookServiceId, httpOptions);
+    this.availableBookingDayObs = this.http.get<string>(serviceUrl+'/booking/availableBooking/'+req.formattedDate+"/"+req.bookServiceId, httpOptions);
     return this.availableBookingDayObs;
   }
   
   availableBookingMonth (req: ServiceRequest) {
-    this.availableBookingDayObs = this.http.get<string>('http://localhost:3000/booking/availableBooking/'+req.formattedDate+"/"+req.bookServiceId, httpOptions);
+    this.availableBookingDayObs = this.http.get<string>(serviceUrl+'/booking/availableBooking/'+req.formattedDate+"/"+req.bookServiceId, httpOptions);
     return this.availableBookingDayObs;
   }
 
   saveBooking (req: ServiceRequest) {
-    return this.http.post('http://localhost:3000/booking/saveBooking', JSON.stringify(req), httpOptions);
+    return this.http.post(serviceUrl+'/booking/saveBooking', JSON.stringify(req), httpOptions);
   }
 
   getParameters (req: ServiceRequest) {
-    return this.http.get<string>('http://localhost:3000/parameters/parameters', httpOptions);
+    return this.http.get<string>(serviceUrl+'/parameters/parameters', httpOptions);
   }
 
   login (req: ServiceRequest) {
-    this.loginObservable = this.http.post('http://localhost:3000/login', JSON.stringify(req), httpOptions);
+    this.loginObservable = this.http.post(serviceUrl+'/login', JSON.stringify(req), httpOptions);
     return this.loginObservable;
   }
 
   logout (req: ServiceRequest) {
-    return this.http.get<string>('http://localhost:3000/logout', httpOptions);
+    return this.http.get<string>(serviceUrl+'/logout', httpOptions);
   }
 }
