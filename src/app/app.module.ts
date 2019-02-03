@@ -14,7 +14,7 @@ import { DemoModule } from './modules/core/components/demo/module';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { DayViewSchedulerComponent } from './modules/core/components/calendar/day-view-scheduler.component';
 import { MatRadioModule } from '@angular/material';
-import { RegistrationComponentComponent } from './modules/core/components/registration-component/registration-component.component';
+// import { RegistrationComponentComponent } from './modules/core/components/registration-component/registration-component.component';
 import { LoginComponentComponent } from './modules/core/components/login-component/login-component.component';
 import { MyMaterialModule } from  './material.module';
 import { LogoutComponentComponent } from './modules/core/components/logout-component/logout-component.component';
@@ -24,7 +24,7 @@ import { LogoutComponentComponent } from './modules/core/components/logout-compo
     AppComponent,
     CalendarComponent,
     DayViewSchedulerComponent,
-    RegistrationComponentComponent,
+    // RegistrationComponentComponent,
     LoginComponentComponent,
     LogoutComponentComponent
   ],

@@ -17,9 +17,11 @@
     <!--  <span>HOME</span> -->
      <span><a href="/" >pArish</a></span>
      <span class="spacer"></span>
-     <a class="btn btn-primary" [class.active]="mode === 'view'"
+     <!-- [class.active]="mode === 'view'" -->
+     <a class="btn btn-primary" 
       href="#" role="button" [routerLink]="['calendarView', 'view']">visualizza</a>
-     <a class="btn btn-primary" [class.active]="mode === 'manage'"
+      <!-- [class.active]="mode === 'manage'" -->
+     <a class="btn btn-primary" 
       href="#" role="button" [routerLink]="['calendarManage', 'manage']">prenota</a>
      <a mat-button routerLink="/register">Register</a>
      <a mat-button routerLink="/login">Login</a>
