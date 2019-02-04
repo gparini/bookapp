@@ -8,12 +8,11 @@ const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type':  'application/json',
     'Authorization': 'my-auth-token',
-    'Access-Control-Allow-Origin':'http://localhost:4200',
+    'Access-Control-Allow-Origin':'https://bookappservices.herokuapp.com',
   }),
   withCredentials: true,
 };
 
-//const serviceUrl = 'http://localhost:3000';
 const serviceUrl = 'https://bookappservices.herokuapp.com';
 
 
