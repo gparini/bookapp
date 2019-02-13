@@ -8,7 +8,7 @@ const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type':  'application/json',
     'Authorization': 'my-auth-token',
-    'Access-Control-Allow-Origin':'https://bookappservices.herokuapp.com',
+    'Access-Control-Allow-Origin': 'https://bookappa.herokuapp.com',
   }),
   withCredentials: true,
 };
